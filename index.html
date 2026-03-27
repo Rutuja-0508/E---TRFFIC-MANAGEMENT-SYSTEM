@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Traffic CCS — City Command System</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ════════════ LOGIN ════════════ -->
+<div id="loginScreen">
+  <div class="login-left">
+    <div class="login-bg-dots"></div>
+    <div class="login-left-content">
+      <div class="login-emblem">🚦</div>
+      <div class="login-brand">E-Traffic<br><span>CCS</span></div>
+      <div class="login-tagline">City Command System for real-time traffic management, signal control, and citizen reporting.</div>
+      <div class="login-features">
+        <div class="login-feat"><div class="login-feat-icon">📡</div><div class="login-feat-text"><strong>Live Signal Control</strong>Manage all city junctions in real-time</div></div>
+        <div class="login-feat"><div class="login-feat-icon">🚨</div><div class="login-feat-text"><strong>Incident Response</strong>Log, track and resolve incidents fast</div></div>
+        <div class="login-feat"><div class="login-feat-icon">📋</div><div class="login-feat-text"><strong>Challan & Rules</strong>Issue challans and manage traffic rules</div></div>
+        <div class="login-feat"><div class="login-feat-icon">👤</div><div class="login-feat-text"><strong>Citizen Reports</strong>Public portal for issue reporting</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="login-form-wrap">
+      <h2>Welcome back</h2>
+      <p>Select your portal and sign in or create an account</p>
+
+      <!-- Role selector -->
+      <div class="role-tabs">
+        <button class="role-tab active" id="roleTab-gov" onclick="switchRole('gov')">
+          <span class="rt-icon">🏛️</span>
+          <div><div class="rt-title">Government</div><div class="rt-sub">Officers & Admin</div></div>
+        </button>
+        <button class="role-tab" id="roleTab-pub" onclick="switchRole('pub')">
+          <span class="rt-icon">🙋</span>
+          <div><div class="rt-title">Citizen</div><div class="rt-sub">Public Portal</div></div>
+        </button>
+      </div>
+
+      <!-- Government pane -->
+      <div id="pane-gov">
+        <div class="form-subtabs">
+          <button class="form-subtab active" id="gtab-login" onclick="switchSubTab('gov','login')">Sign In</button>
+          <button class="form-subtab" id="gtab-reg" onclick="switchSubTab('gov','register')">Register</button>
+        </div>
+
+        <div id="gov-login-form">
+          <div class="f-group"><label class="f-label">Officer ID / Username</label><input class="f-input" id="gov-user" placeholder="Enter username" autocomplete="username"/></div>
+          <div class="f-group"><label class="f-label">Password</label><input class="f-input" id="gov-pass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin('gov')" autocomplete="current-password"/></div>
+          <div class="login-err" id="gov-err">Invalid credentials. Please try again.</div>
+          <button class="login-btn" onclick="doLogin('gov')">Sign In to Command System</button>
+          <div class="demo-row">
+            <span class="demo-pill" onclick="fillDemo('gov','admin','admin123')">👤 Admin demo</span>
+            <span class="demo-pill" onclick="fillDemo('gov','officer','officer123')">🚔 Officer demo</span>
+          </div>
+        </div>
+
+        <div id="gov-reg-form" style="display:none">
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Full Name <span class="req">*</span></label><input class="f-input" id="greg-name" placeholder="Full name"/></div>
+            <div class="f-group"><label class="f-label">Username <span class="req">*</span></label><input class="f-input" id="greg-user" placeholder="Choose username"/></div>
+          </div>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Badge / Employee ID</label><input class="f-input" id="greg-badge" placeholder="GOV-XXX"/></div>
+            <div class="f-group"><label class="f-label">Department</label>
+              <select class="f-input" id="greg-dept"><option>Traffic Control HQ</option><option>Field Operations</option><option>Signal Engineering</option><option>Administration</option></select>
+            </div>
+          </div>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Rank / Designation</label>
+              <select class="f-input" id="greg-rank"><option>Traffic Constable</option><option>Traffic Inspector</option><option>Sr. Traffic Officer</option><option>DCP Traffic</option><option>Admin Officer</option></select>
+            </div>
+            <div class="f-group"><label class="f-label">Mobile No.</label><input class="f-input" id="greg-phone" placeholder="10-digit number" type="tel"/></div>
+          </div>
+          <div class="f-group"><label class="f-label">Password <span class="req">*</span></label><input class="f-input" id="greg-pass" type="password" placeholder="Minimum 6 characters"/></div>
+          <div class="login-err" id="gov-reg-err">Registration failed.</div>
+          <button class="login-btn" onclick="doGovRegister()">Create Officer Account</button>
+        </div>
+      </div>
+
+      <!-- Public pane -->
+      <div id="pane-pub" style="display:none">
+        <div class="form-subtabs">
+          <button class="form-subtab active" id="ptab-login" onclick="switchSubTab('pub','login')">Sign In</button>
+          <button class="form-subtab" id="ptab-reg" onclick="switchSubTab('pub','register')">Register</button>
+        </div>
+
+        <div id="pub-login-form">
+          <div class="f-group"><label class="f-label">Username</label><input class="f-input" id="pub-user" placeholder="Enter username" autocomplete="username"/></div>
+          <div class="f-group"><label class="f-label">Password</label><input class="f-input" id="pub-pass" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin('pub')" autocomplete="current-password"/></div>
+          <div class="login-err" id="pub-err">Invalid credentials.</div>
+          <button class="login-btn" style="background:var(--teal)" onclick="doLogin('pub')">Sign In to Citizen Portal</button>
+          <div class="demo-row">
+            <span class="demo-pill" onclick="fillDemo('pub','public','public123')">👤 Citizen demo</span>
+            <span class="demo-pill" onclick="fillDemo('pub','riya','riya123')">👤 Riya demo</span>
+          </div>
+        </div>
+
+        <div id="pub-reg-form" style="display:none">
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Full Name <span class="req">*</span></label><input class="f-input" id="preg-name" placeholder="Your full name"/></div>
+            <div class="f-group"><label class="f-label">Username <span class="req">*</span></label><input class="f-input" id="preg-user" placeholder="Choose username"/></div>
+          </div>
+          <div class="f-row">
+            <div class="f-group"><label class="f-label">Mobile Number</label><input class="f-input" id="preg-phone" placeholder="10-digit number" type="tel"/></div>
+            <div class="f-group"><label class="f-label">City / Area</label><input class="f-input" id="preg-city" placeholder="e.g. Pune, Kothrud"/></div>
+          </div>
+          <div class="f-group"><label class="f-label">Password <span class="req">*</span></label><input class="f-input" id="preg-pass" type="password" placeholder="Minimum 6 characters"/></div>
+          <div class="login-err" id="pub-reg-err">Registration failed.</div>
+          <button class="login-btn" style="background:var(--teal)" onclick="doPubRegister()">Create Citizen Account</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ APP ════════════ -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-icon" id="tb-icon">🚦</div>
+      <div class="topbar-title">E-Traffic CCS</div>
+    </div>
+    <nav class="topbar-nav" id="topNav"></nav>
+    <div class="topbar-right">
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+      <div class="topbar-clock" id="topClock">00:00:00</div>
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <span class="user-name" id="userName">User</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="content" id="mainContent"></div>
+  </div>
+</div>
+
+
+<!-- MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBox">
+    <div class="modal-title" id="modalTitle"></div>
+    <div id="modalBody"></div>
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
